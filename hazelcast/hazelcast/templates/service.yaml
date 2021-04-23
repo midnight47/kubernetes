@@ -1,0 +1,32 @@
+{{- if and .Values.hazelcast.enabled .Values.service.create }}
+apiVersion: v1
+kind: Service
+metadata:
+{{- if .Values.mancenter.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+{{- end }}
+  name: {{ template "hazelcast.serviceName" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    helm.sh/chart: {{ template "hazelcast.chart" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+spec:
+  type: {{ .Values.service.type }}
+  {{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
+  {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ template "hazelcast.name" . }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    role: hazelcast
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.port }}
+    targetPort: hazelcast
+    {{- if .Values.service.nodePort }}
+    nodePort: {{ .Values.service.nodePort }}
+    {{- end }}
+    name: hzport
+{{- end -}}

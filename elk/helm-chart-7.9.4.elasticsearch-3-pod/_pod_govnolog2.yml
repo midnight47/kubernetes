@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: counter-replicaset
+  namespace: terminal-soft
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: counter
+  template:
+    metadata:
+      labels:
+        app: counter
+    spec:
+      containers:
+        - name: count
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          args: [/bin/sh, -c,
+                  'i=0; while true; do echo TEEEEEEEEEST  "$i: $(date)"; i=$((i+1)); sleep 1; done']
+

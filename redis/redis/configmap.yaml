@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+data:
+  5050: "m-logstash-megabuilder/logstash-logstash:5044"
+  5672: "rabbitmq/rabbitmq:5672"
+

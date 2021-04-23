@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-haproxy-balancer
+  namespace: redis
+spec:
+  type: ClusterIP
+  selector:
+    app: redis-haproxy
+  ports:
+  - port: 6379
+    targetPort: 6379
