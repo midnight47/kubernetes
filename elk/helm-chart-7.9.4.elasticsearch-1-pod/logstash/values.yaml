@@ -47,6 +47,11 @@ logstashPipeline:
           add_tag => "tag-test-balance-online"
           remove_field => ["[agent][name]","[agent][version]","[host][mac]","[host][ip]"] }
         }
+        if [kubernetes][namespace] == "test-cache-builder" {
+         mutate {
+          add_tag => "tag-test-cache-builder"
+          remove_field => ["[agent][name]","[agent][version]","[host][mac]","[host][ip]"] }
+        }
        }
 
     output {
@@ -82,6 +87,18 @@ logstashPipeline:
             index => "balance-online-%{+YYYY.MM.dd}"
             ilm_rollover_alias => "balance-online"
             ilm_policy => "balance-online"
+            user => '${ELASTICSEARCH_USERNAME}'
+            password => '${ELASTICSEARCH_PASSWORD}'
+        }
+      }
+      if "tag-test-cache-builder" in [tags] {
+        elasticsearch {
+            hosts => [ "https://elasticsearch-master:9200" ]
+            cacert => "/usr/share/logstash/config/certs/mysite.crt"
+            manage_template => false
+            index => "cache-builder-%{+YYYY.MM.dd}"
+            ilm_rollover_alias => "cache-builder"
+            ilm_policy => "cache-builder"
             user => '${ELASTICSEARCH_USERNAME}'
             password => '${ELASTICSEARCH_PASSWORD}'
         }

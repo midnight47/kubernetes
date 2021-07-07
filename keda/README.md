@@ -39,7 +39,7 @@ spec:
   triggers:
   - type: prometheus
     metadata:
-      serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring.svc.test.local:9090
+      serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring.svc.test.ru:9090
       metricName: nginx_ingress_controller_requests
       threshold: '100'
       query: sum(irate(nginx_ingress_controller_requests{namespace="my-site"}[3m])) by (ingress)*10
@@ -61,7 +61,7 @@ cooldownPeriod: 300 # Optional. Default: 300 seconds
 
 указываем адрес нашего prometheus
 
-serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring.svc.test.local:9090
+serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring.svc.test.ru:9090
 адрес идёт в виде сервис.неймспейс.svc.имя_кластера
 
 указываем нашу метрику:

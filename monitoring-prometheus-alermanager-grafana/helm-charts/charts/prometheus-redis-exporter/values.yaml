@@ -39,7 +39,7 @@ tolerations: []
 
 affinity: {}
 
-redisAddress: redis://redis-cluster-headless.redis.svc.test.local:6379
+redisAddress: redis://redis-cluster-headless.redis.svc.test.ru:6379
 annotations: {}
 #  prometheus.io/path: /metrics
 #  prometheus.io/port: "9121"

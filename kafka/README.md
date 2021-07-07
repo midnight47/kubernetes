@@ -40,7 +40,7 @@ tar -xvf kafka-manager-2.3.5.tgz
 rm -rf kafka-manager-2.3.5.tgz
 [root@prod-vsrv-kubemaster1 cp-helm-charts]# vim kafka-manager/values.yaml
 
-zkHosts: "confluent-cp-zookeeper.kafka.svc.test.local:2181"
+zkHosts: "confluent-cp-zookeeper.kafka.svc.test.ru:2181"
 
 basicAuth:
   enabled: true
@@ -63,9 +63,9 @@ ingress:
 [root@prod-vsrv-kubemaster1 cp-helm-charts]# helm install kafka-manager kafka-manager/ --values kafka-manager/values.yaml -n kafka
 
 Проверяем по адресу:
-http://kafka.prod.test.local/
+http://kafka.prod.test.ru/
 
-далее настраиваем в панельке кластер, в качестве адреса для zookeeper указываем:℅nfluent-cp-zookeeper.kafka.svc.test.local:2181
+далее настраиваем в панельке кластер, в качестве адреса для zookeeper указываем:℅nfluent-cp-zookeeper.kafka.svc.test.ru:2181
 
 
 

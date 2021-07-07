@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd
+  namespace: efk
+  labels:
+    app: fluentd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluentd
+  namespace: efk
+  labels:
+    app: fluentd
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd
+roleRef:
+  kind: ClusterRole
+  name: fluentd
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: fluentd
+  namespace: efk
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: efk
+  labels:
+    app: fluentd
+spec:
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      serviceAccount: fluentd
+      serviceAccountName: fluentd
+#      tolerations:
+#      - key: node-role.kubernetes.io/master
+#        effect: NoSchedule
+      containers:
+      - name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset:v1.11.5-debian-elasticsearch7-1.1
+        env:
+          - name:  FLUENT_ELASTICSEARCH_HOST
+            value: "elasticsearch.efk.svc.test.ru"
+          - name:  FLUENT_ELASTICSEARCH_PORT
+            value: "9200"
+          - name: FLUENT_ELASTICSEARCH_SCHEME
+            value: "http"
+          - name: FLUENTD_SYSTEMD_CONF
+            value: disable
+          - name: FLUENT_ELASTICSEARCH_SED_DISABLE
+            value: "true"
+          - name: FLUENT_ELASTICSEARCH_ENABLE_ILM
+            value: "true"
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+
+        - name: fluent-conf  #имя нашего конфигмапа, созданного ранее.
+          mountPath: /fluentd/etc/fluent.conf # путь по которому мы будем монтировать наш конфиг
+          subPath: fluent.conf  # не удаляет всё из директории а добавляет именно файл
+        - name: fluentd-template-json
+          mountPath: /fluentd/etc/fluentd-template.json
+          subPath: fluentd-template.json
+
+      terminationGracePeriodSeconds: 30
+
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+
+      - name: fluent-conf
+        configMap:
+          name: fluent-conf
+          items:   # указывает какой ключ должен монтироваться
+          - key: fluent.conf  # имя из конфигмапа
+            path: fluent.conf
+
+      - name: fluentd-template-json
+        configMap:
+          name: fluentd-template-json
+          items:
+          - key: fluentd-template.json
+            path: fluentd-template.json
+
+
+
+
+
+
+

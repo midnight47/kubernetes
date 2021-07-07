@@ -69,10 +69,10 @@
         <property name="Authentication Strategy">SIMPLE</property>
         <property name="Manager DN">{{.Values.auth.ldap.admin}}</property>
         <property name="Manager Password">{{.Values.auth.ldap.pass}}</property>
-        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.test.local/keystore.jks</property>
+        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.test.ru/keystore.jks</property>
         <property name="TLS - Keystore Password">{{.Values.auth.keystorePasswd}}</property>
         <property name="TLS - Keystore Type">JKS</property>
-        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.test.local/truststore.jks</property>
+        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Release.Namespace}}.svc.test.ru/truststore.jks</property>
         <property name="TLS - Truststore Password">{{.Values.auth.truststorePasswd}}</property>
         <property name="TLS - Truststore Type">JKS</property>
         <property name="TLS - Client Auth">NONE</property>

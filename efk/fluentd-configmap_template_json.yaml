@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-template-json
+  namespace: efk
+data:
+  fluentd-template.json: |
+    {
+      "index_patterns": ["terminal-soft*"],
+      "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 1,
+        "index.lifecycle.name": "terminal-soft-policy", 
+      "index.lifecycle.rollover_alias": "terminal-soft" 
+      }
+    }
+

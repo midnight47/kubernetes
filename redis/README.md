@@ -53,7 +53,7 @@ sentinel:
   enabled: true
   downAfterMilliseconds: 600
 
-clusterDomain: test.local
+clusterDomain: megaprod.local
 
 cluster:
   enabled: true

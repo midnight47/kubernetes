@@ -9,7 +9,7 @@ vim hazelcast/values.yaml
     enabled: true
     annotations: {}
     hosts:
-     - hazelcastmgr.prod.test.local
+     - hazelcastmgr.prod.test.ru
 
   persistence:
     enabled: true

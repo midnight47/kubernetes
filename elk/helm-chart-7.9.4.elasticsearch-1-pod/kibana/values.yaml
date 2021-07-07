@@ -141,7 +141,7 @@ ingress:
      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   path: /
   hosts:
-    - elk.prod.test.local
+    - elk.prod.test.ru
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

@@ -42,7 +42,7 @@ namespaceOverride: "monitoring"
   ingress:                                                    
     enabled: true                                             
     hosts:                                                    
-      - alertmanager.prod.test.local                       
+      - alertmanager.prod.test.ru                       
     paths:                                                    
      - /
 
@@ -78,7 +78,7 @@ grafana:
     ## Must be provided if Ingress is enable.
     ##
     hosts:
-      - grafana.prod.test.local
+      - grafana.prod.test.ru
     #hosts: []
     ## Path for grafana ingress
     path: /
@@ -130,7 +130,7 @@ prometheus-node-exporter:
     ## Must be provided if Ingress is enabled.     
     ##                                             
     hosts:                                         
-      - prometheus.prod.test.local             
+      - prometheus.prod.test.ru             
                                          
     ## Paths to use for ingress rules -            
     ##                                             
@@ -347,7 +347,7 @@ vim prometheus-rabbitmq-exporter/values.yaml
 
 loglevel: info
 rabbitmq:
-  url: http://rabbitmq-headless.rabbitmq.svc.test.local:15672
+  url: http://rabbitmq-headless.rabbitmq.svc.test.ru:15672
   user: admin
   password: secret-admin-password
   # If existingPasswordSecret is set then password is ignored

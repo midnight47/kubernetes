@@ -149,46 +149,70 @@ alertmanager:
       resolve_timeout: 5m
       smtp_smarthost: 10.230.144.56:25
     route:
-        receiver: 'telegram'
+       # receiver: 'telegram'
         receiver: 'email_unixadmins'
         routes:
-        - match:
-            severity: critical
+
+        - receiver: "email_unixadmins"
+          group_wait: 10s
           repeat_interval: 48h
+          match_re:
+            severity: "critical"
           continue: true
-          receiver: 'telegram'
-        - match:
-            alertname: Watchdog
+
+        - receiver: "telegram-admins"
+          group_wait: 10s
           repeat_interval: 48h
+          match_re:
+            alertname: "Watchdog"
           continue: true
-          receiver: 'telegram'
-        - match:
-            severity: critical
-          repeat_interval: 48h
+
+        - receiver: "telegram-terminal-soft"
+          group_wait: 10s
+          repeat_interval: 1h
+          match_re:
+          #  severity: "critical"
+            team: "terminal-soft"
+          continue: false
+
+        - receiver: "telegram-admins"
+          group_wait: 10s
+          repeat_interval: 1h
+          match_re:
+            severity: "critical|warning"
           continue: true
-          receiver: 'email_unixadmins'
+
+
+
+
     receivers:
-        - name: 'telegram'
+        - name: 'telegram-admins'
           webhook_configs:
               - send_resolved: true
-                url: 'http://alertmanager-bot:8080'
+                url: 'http://telegram-admins-group:9087/alert/-1001441100259'               
+
+        - name: 'telegram-terminal-soft'
+          webhook_configs:
+              - send_resolved: true
+                url: 'http://telegram-terminal-soft:9087/alert/-597056946'
+
 
         - name: 'email_unixadmins'
           email_configs:
-              - to: 'tfokshina@test.kg'
-                from: 'prod-vsrv-kuber-alertmanager@test.kg'
+              - to: 'tfokshina@test.ru'
+                from: 'prod-vsrv-kuber-alertmanager@test.ru'
                 require_tls: false
                 send_resolved: true
-              - to: 'ababkin@test.kg'
-                from: 'prod-vsrv-kuber-alertmanager@test.kg'
+              - to: 'ababkin@test.ru'
+                from: 'prod-vsrv-kuber-alertmanager@test.ru'
                 require_tls: false
                 send_resolved: true
-              - to: 'elipatov@test.kg'
-                from: 'prod-vsrv-kuber-alertmanager@test.kg'
+              - to: 'elipatov@test.ru'
+                from: 'prod-vsrv-kuber-alertmanager@test.ru'
                 require_tls: false
                 send_resolved: true
-              - to: 'alisitsa@test.kg'
-                from: 'prod-vsrv-kuber-alertmanager@test.kg'
+              - to: 'alisitsa@test.ru'
+                from: 'prod-vsrv-kuber-alertmanager@test.ru'
                 require_tls: false
                 send_resolved: true
 
@@ -267,7 +291,7 @@ alertmanager:
     ## Hosts must be provided if Ingress is enabled.
     ##
     hosts: 
-      - alertmanager.prod.test.local 
+      - alertmanager.prod.test.ru 
 
     ## Paths to use for ingress rules - one path should match the alertmanagerSpec.routePrefix
     ##
@@ -680,7 +704,7 @@ grafana:
     ## Must be provided if Ingress is enable.
     ##
     hosts:
-      - grafana.prod.test.local
+      - grafana.prod.test.ru
     #hosts: []
 
     ## Path for grafana ingress
@@ -693,6 +717,16 @@ grafana:
     # - secretName: grafana-general-tls
     #   hosts:
     #   - grafana.example.com
+  persistence:
+    type: pvc
+    enabled: true
+    storageClassName: nfs-storageclass
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+    # annotations: {}
+    finalizers:
+      - kubernetes.io/pvc-protection
 
   sidecar:
     dashboards:
@@ -1557,11 +1591,11 @@ prometheusOperator:
 
   ## Set the prometheus config reloader side-car CPU limit
   ##
-  configReloaderCpu: 100m
+  configReloaderCpu: 200m
 
   ## Set the prometheus config reloader side-car memory limit
   ##
-  configReloaderMemory: 50Mi
+  configReloaderMemory: 100Mi
 
   ## Set a Field Selector to filter watched secrets
   ##
@@ -1719,7 +1753,7 @@ prometheus:
     ## Must be provided if Ingress is enabled.
     ##
     hosts:
-      - prometheus.prod.test.local
+      - prometheus.prod.test.ru
     #hosts: []
 
     ## Paths to use for ingress rules - one path should match the prometheusSpec.routePrefix

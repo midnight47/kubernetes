@@ -32,7 +32,7 @@ affinity: {}
 
 loglevel: info
 rabbitmq:
-  url: http://rabbitmq-headless.rabbitmq.svc.test.local:15672
+  url: http://rabbitmq-headless.rabbitmq.svc.test.ru:15672
   user: admin
   password: secret-admin-password 
   # If existingPasswordSecret is set then password is ignored

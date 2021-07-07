@@ -1,0 +1,52 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    meta.helm.sh/release-name: prometheus
+    meta.helm.sh/release-namespace: monitoring
+    prometheus-operator-validated: "true"
+  labels:
+    app: kube-prometheus-stack
+    release: prometheus
+  name: terminal-soft-prometheus-alertmanager.rules
+  namespace: monitoring
+  selfLink: /apis/monitoring.coreos.com/v1/namespaces/monitoring/prometheusrules/terminal-soft-prometheus-alertmanager.rules
+spec:
+  groups:
+  - name: terminal-soft-alertmanager.rules
+    rules:
+    - alert: KubePodCrashLooping
+      annotations:
+        description: Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container
+          }}) is restarting {{ printf "%.2f" $value }} times / 5 minutes.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubepodcrashlooping
+        summary: Pod is crash looping.
+      expr: rate(kube_pod_container_status_restarts_total{job="kube-state-metrics",
+        namespace="terminal-soft"}[10m]) * 60 * 5 > 0
+      for: 5m
+      labels:
+        team: "terminal-soft"
+    - alert: KubeContainerWaiting
+      annotations:
+        description: Pod {{ $labels.namespace }}/{{ $labels.pod }} container {{ $labels.container}}
+          has been in waiting state for longer than 1 hour.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubecontainerwaiting
+        summary: Pod container waiting longer than 1 hour
+      expr: sum by (namespace, pod, container) (kube_pod_container_status_waiting_reason{job="kube-state-metrics",
+        namespace="terminal-soft"}) > 0
+      for: 1h
+      labels:
+        team: "terminal-soft"
+    - alert: Code-status
+      annotations:
+        message: |
+          code_status_not_200
+          Namespace: {{ $labels.namespace }} 
+          Podname: {{ $labels.pod }}
+          Status: {{ $labels.status }}
+      expr: sum(increase(nginx_ingress_controller_request_duration_seconds_count{namespace="terminal-soft",status!="200"}[5m])) by (status,namespace,pod)
+        >1
+      for: 2m
+      labels:
+        team: "terminal-soft"
+

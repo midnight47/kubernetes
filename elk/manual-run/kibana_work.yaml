@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: elk.prod.test.local
+    - host: elk.prod.test.ru
       http:
         paths:
         - backend:

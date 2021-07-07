@@ -1,0 +1,53 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dex
+  namespace: kube-system
+data:
+  config.yaml: |
+    issuer: https://dex2.prod.test.ru/
+    web:
+      http: 0.0.0.0:5556
+
+    staticClients:
+    - id: oidc-auth-client
+      redirectURIs:
+      - 'https://gangway2.prod.test.ru/callback'
+      name: 'oidc-auth-client'
+      secret: "super_strong_password" #shared secret from prerequisites
+
+    connectors:
+    - type: ldap
+      id: ldap
+      name: LDAP
+      config:
+        host: 10.230.144.12:389  #Address of AD Server
+        insecureNoSSL: true
+        insecureSkipVerify: true
+        bindDN: CN=svc-k8s-ldap-auth,OU=Service,OU=Accounts,OU=Cellular,OU=Businesses,DC=test,DC=local
+        bindPW: zFW4!PxUqd-5JG #password of user with access to search AD
+        userSearch:
+          baseDN: OU=Bishkek,OU=North,OU=Users,OU=Accounts,OU=Cellular,OU=Businesses,DC=test,DC=local 
+          #filter: "(objectClass=person)"
+          filter: "(objectClass=user)"
+          username: sAMAccountName
+          idAttr: sAMAccountName
+          emailAttr: userPrincipalName
+          nameAttr: displayName
+        groupSearch:
+          baseDN: OU=Groups,OU=Cellular,OU=Businesses,DC=test,DC=local
+          filter: "(objectClass=group)"
+          #userAttr: distinguishedName
+          userAttr: DN
+          groupAttr: member
+          #nameAttr: cn
+          nameAttr: name
+
+    oauth2:
+      skipApprovalScreen: true
+    storage:
+      type: kubernetes
+      config:
+        inCluster: true
+
+

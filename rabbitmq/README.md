@@ -32,13 +32,13 @@ rabbitmq:
   existingPasswordSecret: secret-admin-password
   clustering:
     address_type: hostname
-    k8s_domain: test.local
+    k8s_domain: megaprod.local
     rebalance: false
 
   configuration: |-
     ## Clustering
     cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
-    cluster_formation.k8s.host = kubernetes.default.svc.test.local
+    cluster_formation.k8s.host = kubernetes.default.svc.megaprod.local
     cluster_formation.node_cleanup.interval = 10
     cluster_formation.node_cleanup.only_log_warning = true
     cluster_partition_handling = autoheal
@@ -60,7 +60,7 @@ replicas: 2
 
 ingress:
   enabled: true
-  hostName: rabbitmq.prod.test.local
+  hostName: rabbitmq.prod.test.ru
   path: /
 
 
@@ -144,5 +144,5 @@ kubectl edit daemonsets.apps -n ingress-nginx  ingress-nginx-controller
 после добавленния на ингресах появится пор 5672 на который можно обращаться из вне.
 
 если необходимо обращаться изнутри кластера то можно использовать адресс:
-rabbitmq-headless.rabbitmq.svc.test.local:5672
+rabbitmq-headless.rabbitmq.svc.megaprod.local:5672
 

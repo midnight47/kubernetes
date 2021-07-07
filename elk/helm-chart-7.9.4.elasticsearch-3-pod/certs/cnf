@@ -7,7 +7,7 @@ prompt = no
 C = KG
 ST = Bishkek
 L = Bishkek
-O = test
+O = Test
 CN = elasticsearch-master
 
 [v3_req]
@@ -21,7 +21,7 @@ DNS.1 = elasticsearch-master
 DNS.2 = kibana-kibana
 DNS.3 = elasticsearch-master-headless
 DNS.4 = logstash-logstash-headless
-DNS.5 = elk.prod.test.local
+DNS.5 = elk.prod.test.ru
 DNS.6 = elasticsearch-master-0
 DNS.7 = elasticsearch-master-1
 DNS.8 = elasticsearch-master-2

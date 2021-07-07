@@ -48,7 +48,7 @@
         <property name="Users File">./auth-conf/users.xml</property>
         <property name="Legacy Authorized Users File"></property>
         {{- range $i := until $replicas }}
-        <property name="Initial User Identity {{ $i }}">CN={{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.test.local, OU=NIFI</property>
+        <property name="Initial User Identity {{ $i }}">CN={{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.test.ru, OU=NIFI</property>
         {{- end }}
         {{- if .Values.auth.ldap.enabled}}
         <property name="Initial User Identity admin">{{.Values.auth.ldap.admin}}</property>
@@ -124,10 +124,10 @@
         <property name="Authentication Strategy">SIMPLE</property>
         <property name="Manager DN">{{.Values.auth.ldap.admin}}</property>
         <property name="Manager Password">{{.Values.auth.ldap.pass}}</property>
-        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.test.local/keystore.jks</property>
+        <property name="TLS - Keystore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.test.ru/keystore.jks</property>
         <property name="TLS - Keystore Password">{{.Values.auth.SSL.keystorePasswd}}</property>
         <property name="TLS - Keystore Type">jks</property>
-        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.test.local/truststore.jks</property>
+        <property name="TLS - Truststore">/opt/nifi/nifi-current/conf/{{.Release.Name}}-nifi-0.{{.Release.Name}}-nifi-headless.{{.Values.properties.namespace}}.svc.test.ru/truststore.jks</property>
         <property name="TLS - Truststore Password">{{.Values.auth.SSL.truststorePasswd}}</property>
         <property name="TLS - Truststore Type">JKS</property>
         <property name="TLS - Client Auth">NONE</property>
@@ -229,7 +229,7 @@
         {{- end}}
         <property name="Legacy Authorized Users File"></property>
         {{- range $i := until $replicas }}
-        <property name="Node Identity {{ $i }}">CN={{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.test.local, OU=NIFI</property>
+        <property name="Node Identity {{ $i }}">CN={{ $fullname }}-{{ $i }}.{{ $fullname }}-headless.{{ $namespace }}.svc.test.ru, OU=NIFI</property>
         {{- end }}
         <property name="Node Identity"></property>
     </accessPolicyProvider>

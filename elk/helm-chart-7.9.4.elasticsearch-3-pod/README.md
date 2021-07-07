@@ -21,7 +21,7 @@ prompt = no
 C = KG
 ST = Bishkek
 L = Bishkek
-O = test
+O = Test
 CN = elasticsearch-master
 
 [v3_req]
@@ -35,7 +35,7 @@ DNS.1 = elasticsearch-master
 DNS.2 = kibana-kibana
 DNS.3 = elasticsearch-master-headless
 DNS.4 = logstash-logstash-headless
-DNS.5 = elk.prod.test.local
+DNS.5 = elk.prod.test.ru
 DNS.6 = elasticsearch-master-0
 DNS.7 = elasticsearch-master-1
 DNS.8 = elasticsearch-master-2
@@ -178,7 +178,7 @@ ingress:
      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
   path: /
   hosts:
-    - elk.prod.test.local
+    - elk.prod.test.ru
 
 
 Перейдём к настройке logstash
@@ -327,7 +327,7 @@ vim elasticsearch/templates/statefulset.yaml
 [root@prod-vsrv-kubemaster1 helm-charts]# helm install kibana -n elk --values kibana/values.yaml kibana/
 
 ждём когда запустится кибана и переходим по домену указанному в ingress у кибана в переменных
-https://elk.prod.test.local/login
+https://elk.prod.test.ru/login
 
 
 

@@ -1,0 +1,35 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gangway-svc
+  namespace: kube-system
+  labels:
+    app: gangway
+spec:
+  type: ClusterIP
+  ports:
+    - name: "http"
+      protocol: TCP
+      port: 80
+      targetPort: "http"
+  selector:
+    app: gangway
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gangway
+  namespace: kube-system
+spec:
+  tls:
+  - secretName: gangway-tls
+    hosts:
+    - gangway2.prod.test.ru #dns name previously configured for gangway
+  rules:
+  - host: gangway2.prod.test.ru #dns name previously configured for gangway
+    http:
+      paths:
+      - backend:
+          serviceName: gangway-svc
+          servicePort: http

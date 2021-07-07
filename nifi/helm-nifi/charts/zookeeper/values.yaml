@@ -41,7 +41,7 @@ image:
 
 ## Kubernetes Cluster Domain
 ##
-clusterDomain: test.local
+clusterDomain: test.ru
 
 ## Add labels to all the deployed resources
 ##

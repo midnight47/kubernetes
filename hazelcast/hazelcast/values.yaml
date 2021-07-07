@@ -240,7 +240,7 @@ mancenter:
     enabled: true
     annotations: {}
     hosts:
-     - hazelcastmgr.prod.test.local
+     - hazelcastmgr.prod.test.ru
     # tls:
     # - secretName: hazelcast-ingress-tls
     #   hosts:

@@ -1,0 +1,32 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dex
+  namespace: kube-system
+spec:
+  selector:
+    app: dex
+  ports:
+  - name: dex
+    port: 5556
+    targetPort: 5556
+    protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dex
+  namespace: kube-system
+spec:
+  tls:
+  - hosts:
+    - dex2.prod.test.ru
+    secretName: dex-tls
+  rules:
+  - host: dex2.prod.test.ru #Your DNS Name for Dex
+    http:
+      paths:
+      - backend:
+          serviceName: dex
+          servicePort: 5556

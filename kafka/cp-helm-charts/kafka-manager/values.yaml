@@ -36,7 +36,7 @@ image:
 ## the bundled zookeeper chart service url if enabled (see below).
 ## This value can be a template
 ##
-zkHosts: "confluent-cp-zookeeper.kafka.svc.test.local:2181"
+zkHosts: "confluent-cp-zookeeper.kafka.svc.megaprod.local:2181"
 
 ## Clusters to be added through the kafka-manager api
 ##
@@ -135,7 +135,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - kafka.prod.test.local
+    - kafka.prod.test.ru
   tls: []
     # - secretName: kafka-manager-tls
     #   hosts:

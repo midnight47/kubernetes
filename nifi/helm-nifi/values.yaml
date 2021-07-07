@@ -1,13 +1,14 @@
 ---
 # Number of nifi nodes
-replicaCount: 1
+replicaCount: 2
 
 ## Set default image, imageTag, and imagePullPolicy.
 ## ref: https://hub.docker.com/r/apache/nifi/
 ##
 image:
   repository: apache/nifi
-  tag: "1.12.1"
+ # tag: "1.12.1"
+  tag: "1.9.2"
   pullPolicy: IfNotPresent
 
   ## Optionally specify an imagePullSecret.
@@ -78,6 +79,10 @@ properties:
 ## Include additional libraries in the Nifi containers by using the postStart handler
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
 # postStart: /opt/nifi/psql; wget -P /opt/nifi/psql https://jdbc.postgresql.org/download/postgresql-42.2.6.jar
+postStart: "/bin/cp /opt/nifi-conf-lib/lib/* /opt/nifi/nifi-current/lib/"
+  #exec:
+  #  command: [ "/bin/cp /opt/nifi-conf-lib/lib/* /opt/nifi/nifi-current/lib/"]
+  #  command: ["/bin/sh", "-c", "echo Hello from the postStart handler"]
 
 # Nifi User Authentication
 auth:
@@ -119,7 +124,7 @@ headless:
 
 # ui service
 service:
-  type: LoadBalancer
+  type: ClusterIP
   httpPort: 8080
   httpsPort: 9443
   nodePort: 30236
@@ -155,7 +160,7 @@ ingress:
   enabled: true
   annotations: {}
   tls: []
-  hosts: [nifi.prod.test.local]
+  hosts: [nifi.prod.test.ru]
   path: /
   # If you want to change the default path, see this issue https://github.com/cetic/helm-nifi/issues/22
 
@@ -171,7 +176,7 @@ sidecar:
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 persistence:
-  enabled: false
+  enabled: true
 
   # When creating persistent storage, the NiFi helm chart can either reference an already-defined
   # storage class by name, such as "standard" or can define a custom storage class by specifying
@@ -184,7 +189,7 @@ persistence:
   #
   # The default storage class is used if this variable is not set.
 
-  accessModes:  [ReadWriteOnce]
+  accessModes:  [ReadWriteMany]
   ## Storage Capacities for persistent volumes
   configStorage:
     size: 100Mi
@@ -195,13 +200,13 @@ persistence:
     size: 1Gi
   # Storage capacity for the FlowFile repository
   flowfileRepoStorage:
-    size: 10Gi
+    size: 5Gi
   # Storage capacity for the Content repository
   contentRepoStorage:
-    size: 10Gi
+    size: 5Gi
   # Storage capacity for the Provenance repository. When changing this, one should also change the properties.provenanceStorage value above, also.
   provenanceRepoStorage:
-    size: 10Gi
+    size: 5Gi
   # Storage capacity for nifi logs
   logStorage:
     size: 5Gi
@@ -244,9 +249,16 @@ initContainers: {}
   #     - mountPath: /tmp/foo
   #       name: foo
 
-extraVolumeMounts: []
+extraVolumeMounts:
+  - name: nfs-pvc-nifi-lib-conf
+    mountPath: /opt/nifi-conf-lib
 
-extraVolumes: []
+extraVolumes:
+  - name: nfs-pvc-nifi-lib-conf
+    persistentVolumeClaim:
+      claimName: nfs-pvc-nifi-lib-conf 
+#properties:
+#  customLibPath: "/opt/nifi-conf-lib"
 
 ## Extra containers
 extraContainers: []

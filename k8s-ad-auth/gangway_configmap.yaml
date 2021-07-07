@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gangway
+  namespace: kube-system
+data:
+  gangway.yaml: |
+    clusterName: "TestProdCluster"
+    authorizeURL: "https://dex2.prod.test.ru/auth" #replace the domain name with your domain
+    tokenURL: "https://dex2.prod.test.ru/token" #replace the domain name with your domain
+    scopes: ["openid", "profile", "email", "offline_access", "groups"]
+    clientID: "oidc-auth-client"
+    clientSecret: "super_strong_password" #secret key from prerequisites again. This should match the Dex key
+    trustedCAPath: "/opt/ca.crt"
+    redirectURL: "https://gangway2.prod.test.ru/callback"
+    usernameClaim: "email"
+    emailClaim: "email"
+    apiServerURL: https://10.242.146.30:6443 #This should be your k8s API URL

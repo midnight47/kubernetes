@@ -103,7 +103,7 @@ spec:
           mountPath: /snapshot
         env:
           - name: cluster.name
-            value: test.local
+            value: test.ru
           - name: node.name
             valueFrom:
               fieldRef:

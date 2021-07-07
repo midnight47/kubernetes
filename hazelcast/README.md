@@ -34,7 +34,7 @@ rm -f hazelcast-3.6.1.tgz
     enabled: true
     annotations: {}
     hosts:
-     - hazelcastmgr.prod.test.local
+     - hazelcastmgr.prod.test.ru
     # tls:
     # - secretName: hazelcast-ingress-tls
     #   hosts:
@@ -73,7 +73,7 @@ Kubectl create ns hazelcast
 helm upgrade --install hazelcast ./ -f ./values.yaml -n hazelcast
 
 
-Переходим в браузере по адресу  http://hazelcastmgr.prod.test.local. 
+Переходим в браузере по адресу  http://hazelcastmgr.prod.test.ru. 
 
 При первом запуске будет необходимо  создать учетную запись администратора. 
 
