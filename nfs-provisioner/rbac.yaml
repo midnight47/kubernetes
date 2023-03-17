@@ -1,14 +1,19 @@
-kind: ServiceAccount
 apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: nfs-pod-provisioner-sa
+  name: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: kube-system
 ---
-kind: ClusterRole # Role of kubernetes
-apiVersion: rbac.authorization.k8s.io/v1 # auth API
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: nfs-provisioner-clusterRole
+  name: nfs-client-provisioner-runner
 rules:
-  - apiGroups: [""] # rules on persistentvolumes
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
     resources: ["persistentvolumes"]
     verbs: ["get", "list", "watch", "create", "delete"]
   - apiGroups: [""]
@@ -24,20 +29,23 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: nfs-provisioner-rolebinding
+  name: run-nfs-client-provisioner
 subjects:
   - kind: ServiceAccount
-    name: nfs-pod-provisioner-sa # defined on top of file
-    namespace: default
-roleRef: # binding cluster role to service account
+    name: nfs-client-provisioner
+    # replace with namespace where provisioner is deployed
+    namespace: kube-system
+roleRef:
   kind: ClusterRole
-  name: nfs-provisioner-clusterRole # name defined in clusterRole
+  name: nfs-client-provisioner-runner
   apiGroup: rbac.authorization.k8s.io
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: nfs-pod-provisioner-otherRoles
+  name: leader-locking-nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: kube-system
 rules:
   - apiGroups: [""]
     resources: ["endpoints"]
@@ -46,13 +54,16 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: nfs-pod-provisioner-otherRoles
+  name: leader-locking-nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: kube-system
 subjects:
   - kind: ServiceAccount
-    name: nfs-pod-provisioner-sa # same as top of the file
+    name: nfs-client-provisioner
     # replace with namespace where provisioner is deployed
-    namespace: default
+    namespace: kube-system
 roleRef:
   kind: Role
-  name: nfs-pod-provisioner-otherRoles
+  name: leader-locking-nfs-client-provisioner
   apiGroup: rbac.authorization.k8s.io
+

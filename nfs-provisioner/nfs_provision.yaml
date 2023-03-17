@@ -1,35 +1,40 @@
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: nfs-pod-provisioner
+  name: nfs-client-provisioner
+  labels:
+    app: nfs-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: kube-system
 spec:
   replicas: 1
-  selector: 
-    matchLabels: 
-      app: nfs-pod-provisioner
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
   template:
     metadata:
       labels:
-        app: nfs-pod-provisioner
+        app: nfs-client-provisioner
     spec:
-      serviceAccountName: nfs-pod-provisioner-sa # name of service account created in rbac.yaml
+      serviceAccountName: nfs-client-provisioner
       containers:
-        - name: nfs-pod-provisioner
-          image: quay.io/external_storage/nfs-client-provisioner:latest
+        - name: nfs-client-provisioner
+          image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
           volumeMounts:
-            - name: nfs-provisioner-v
+            - name: nfs-client-root
               mountPath: /persistentvolumes
           env:
-            - name: PROVISIONER_NAME # do not change
-              value: test-nfs-provisioner # SAME AS PROVISONER NAME VALUE IN STORAGECLASS
-            - name: NFS_SERVER # do not change
-              value: 10.242.146.21 # Ip of the NFS SERVER
-            - name: NFS_PATH # do not change
-              value: /nfs/prod_vsrv_kubernetes # path to nfs directory setup
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/nfs-subdir-external-provisioner
+            - name: NFS_SERVER
+              value: 192.168.1.180
+            - name: NFS_PATH
+              value: /nfs
       volumes:
-       - name: nfs-provisioner-v # same as volumemouts name
-         nfs:
-           server: 10.242.146.21
-           path: /nfs/prod_vsrv_kubernetes
+        - name: nfs-client-root
+          nfs:
+            server: 192.168.1.180
+            path: /nfs
+
